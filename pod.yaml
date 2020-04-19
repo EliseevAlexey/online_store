@@ -7,6 +7,6 @@ metadata:
 spec:
   containers:
     - name: hello-demo3
-      image: hello-spring:v1
+      image: simpledocker:v1
       ports:
         - containerPort: 80
