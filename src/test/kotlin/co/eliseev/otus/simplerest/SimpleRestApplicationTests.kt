@@ -1,4 +1,4 @@
-package co.eliseev.otus.simpledocker
+package co.eliseev.otus.simplerest
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

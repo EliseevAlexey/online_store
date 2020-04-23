@@ -8,10 +8,10 @@ metadata:
     nginx.ingress.kubernetes.io/canary-weight: "20"
 spec:
   rules:
-    - host: hello.world
+    - host: arch.homework
       http:
         paths:
-          - path: /myapp($|/)(.*)
+          - path: /otusapp($|/)(.*)
             backend:
               serviceName: hello-service-canary
               servicePort: 9000

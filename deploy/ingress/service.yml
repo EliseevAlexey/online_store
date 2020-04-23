@@ -4,7 +4,7 @@ metadata:
   name: hello-service
 spec:
   selector:
-    app: hello-py-app-new
+    app: hello-app
   ports:
     - protocol: TCP
       port: 9000

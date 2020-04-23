@@ -9,7 +9,7 @@ spec:
     - host: arch.homework
       http:
         paths:
-          - path: /otusapp/($|/)(.*)
+          - path: /otusapp($|/)(.*)
             backend:
               serviceName: hello-service
               servicePort: 9000
