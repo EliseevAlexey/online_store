@@ -21,7 +21,7 @@ class HealthController {
 
     companion object {
         private const val STATUS = "status"
-        private const val VERSION = 1
+        private const val VERSION = 2
         private val hostName = InetAddress.getLocalHost().hostName
     }
 
