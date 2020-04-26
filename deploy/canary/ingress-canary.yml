@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hello-ingress-canary
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/canary: "true"
+    nginx.ingress.kubernetes.io/canary-weight: "20"
+spec:
+  rules:
+    - host: arch.homework
+      http:
+        paths:
+          - path: /otusapp($|/)(.*)
+            backend:
+              serviceName: hello-service-canary
+              servicePort: 9000

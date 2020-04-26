@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: hello-rs-demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello-demo1
+  template:
+    metadata:
+      labels:
+        app: hello-demo1
+    spec:
+      containers:
+        - name: hello-demo3
+          image: alexeyeliseev/simplerest:v1
+          ports:
+            - containerPort: 80

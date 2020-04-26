@@ -1,14 +1,8 @@
-FROM ubuntu:16.04 as builder
-RUN apt-get update && apt-get install -y maven
+FROM openjdk:8-jre-alpine
+ARG artifactId
+ARG version
+ENV artifact ${artifactId}-${version}.jar
 WORKDIR /app
-COPY . .
-RUN mvn clean package
-
-
-FROM alpine:3.7
-RUN apk --update add openjdk8-jre && java -version
-WORKDIR /root/
-COPY --from=builder /app/target/simpledocker-0.0.1-SNAPSHOT.jar .
+COPY target/${artifact} /app
 EXPOSE 8000
-CMD ["java", "-jar", "simpledocker-0.0.1-SNAPSHOT.jar"]
-
+CMD java -jar /app/${artifact}

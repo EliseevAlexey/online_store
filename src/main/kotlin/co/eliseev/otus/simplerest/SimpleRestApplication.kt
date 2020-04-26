@@ -1,4 +1,4 @@
-package co.eliseev.otus.simpledocker
+package co.eliseev.otus.simplerest
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
