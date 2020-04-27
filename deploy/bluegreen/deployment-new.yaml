@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: hello
-          image: simplerest:v2
+          image: alexeyeliseev/simplerest:v2
           ports:
             - name: web
               containerPort: 8000

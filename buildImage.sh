@@ -1,6 +1,7 @@
 #!/bin/bash
 set -u
 
+REPOSITORY=alexeyeliseev
 IMAGE_VERSION=$1
 
 mvn clean install
@@ -9,4 +10,6 @@ FULL_PROJECT_NAME=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.groupId
 ARTIFACT_ID=$(awk '{print $2}' <<< ${FULL_PROJECT_NAME})
 VERSION=$(awk '{print $3}' <<< ${FULL_PROJECT_NAME})
 
-docker build --build-arg artifactId=${ARTIFACT_ID} --build-arg version=${VERSION} -t ${ARTIFACT_ID}:${IMAGE_VERSION} .
+docker build --build-arg artifactId=${ARTIFACT_ID} --build-arg version=${VERSION} -t ${REPOSITORY}/${ARTIFACT_ID}:${IMAGE_VERSION} .
+
+docker push ${REPOSITORY}/${ARTIFACT_ID}:${IMAGE_VERSION}

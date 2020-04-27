@@ -1,6 +1,6 @@
 package co.eliseev.otus.simplerest.controller
 
-import co.eliseev.otus.simplerest.dto.ResponseMessage
+
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -15,12 +15,13 @@ class HealthController {
     fun checkHost() = "Hello from $hostName\n"
 
     @GetMapping("/health")
-    fun getVersion() = ResponseMessage(HttpStatus.OK)
+    fun getVersion() = mapOf(STATUS to HttpStatus.OK)
 
     @GetMapping("/version")
     fun healthCheck() = "version $VERSION from $hostName\n"
 
     companion object {
+        private const val STATUS = "status"
         private const val VERSION = 2
         private val hostName = InetAddress.getLocalHost().hostName
     }

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: hello-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: hello-app
@@ -13,8 +13,11 @@ spec:
         app: hello-app
     spec:
       containers:
-        - name: hello
-          image: simplerest:v1
+        - name: hello-py
+          image: alexeyeliseev/simplerest:v3
+          env:
+            - name: DB_USER
+              value: alexey
           ports:
             - name: web
               containerPort: 8000
