@@ -1,0 +1,229 @@
+{
+	"info": {
+		"_postman_id": "553ce7e8-4f89-496a-9224-bdf65018efec",
+		"name": "Otus_Software_Architect",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users:getAll",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Host",
+						"value": "{{ingresHost}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{baseUrl}}/{{otusUrlPreffix}}/users",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{otusUrlPreffix}}",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users:create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "59d92c8b-3dc1-4bba-91a0-c98143b9481a",
+						"exec": [
+							"var responseJson = JSON.parse(responseBody)",
+							"pm.collectionVariables.set(\"userId\", responseJson[\"id\"])"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Host",
+						"type": "text",
+						"value": "{{ingresHost}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"name\" : \"newUser\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{baseUrl}}/{{otusUrlPreffix}}/users",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{otusUrlPreffix}}",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users:get",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Host",
+						"type": "text",
+						"value": "{{ingresHost}}"
+					}
+				],
+				"url": {
+					"raw": "http://{{baseUrl}}/{{otusUrlPreffix}}/users/{{userId}}",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{otusUrlPreffix}}",
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users:update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Host",
+						"type": "text",
+						"value": "{{ingresHost}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"name\" : \"newUser2\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{baseUrl}}/{{otusUrlPreffix}}/users/{{userId}}",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{otusUrlPreffix}}",
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users:delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Host",
+						"type": "text",
+						"value": "{{ingresHost}}"
+					}
+				],
+				"url": {
+					"raw": "http://{{baseUrl}}/{{otusUrlPreffix}}/users/{{userId}}",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{otusUrlPreffix}}",
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "a5484171-741e-4762-a850-353c9f5746e2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "43519a16-5101-427f-a97a-c85b1e61b6f0",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "1d69cfcb-cdfb-4b41-a4b9-b9329e3c5c5b",
+			"key": "baseUrl",
+			"value": "arch.homework",
+			"type": "string"
+		},
+		{
+			"id": "197e2338-0781-4d34-8561-acd1d653ad1c",
+			"key": "ingresHost",
+			"value": "arch.homework",
+			"type": "string"
+		},
+		{
+			"id": "a384073d-4e0b-4c19-b914-6fe52a8a7098",
+			"key": "otusUrlPreffix",
+			"value": "otusapp",
+			"type": "string"
+		},
+		{
+			"id": "da813ccc-6bba-43a5-9a56-dd9852a9fa45",
+			"key": "userId",
+			"value": 3,
+			"type": "number"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

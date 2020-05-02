@@ -36,11 +36,20 @@ spec:
               name: postgredb
           env:
             - name: POSTGRES_DB
-              value: myapp
+              valueFrom:
+                secretKeyRef:
+                  name: my-hello-chart-secret
+                  key: DB_NAME
             - name: POSTGRES_USER
-              value: alexey
+              valueFrom:
+                secretKeyRef:
+                  name: my-hello-chart-secret
+                  key: DB_USERNAME
             - name: POSTGRES_PASSWORD
-              value: a
+              valueFrom:
+                secretKeyRef:
+                  name: my-hello-chart-secret
+                  key: DB_PASSWORD
           volumeMounts:
             - name: postgredb
               mountPath: /var/lib/postgresql/data

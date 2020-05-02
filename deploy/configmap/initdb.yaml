@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hello-initdb
+spec:
+  template:
+    metadata:
+      name: hello-initdb
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: post-install-job
+          env:
+            - name: DB_PSQL_URL
+              valueFrom:
+                secretKeyRef:
+                  name: hello-secret
+                  key: DB_PSQL_URL
+          image: postgres:latest
+          command:
+            - sh
+            - "-c"
+            - |
+              psql $DB_PSQL_URL <<'EOF'
+                create table users (id serial primary key, name varchar);
+                insert into users (id, name) values (1, 'initdb');
+              EOF
+  backoffLimit: 2

@@ -1,0 +1,15 @@
+apiVersion: v2
+name: hello-chart
+description: A Helm chart for Kubernetes
+
+type: application
+version: 0.1.0
+appVersion: v3
+
+dependencies:
+  - name: postgresql
+    version: ^8.9.2
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+    tags:
+      - my-dicts-common-database
