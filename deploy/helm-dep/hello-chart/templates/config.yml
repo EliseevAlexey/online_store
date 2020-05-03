@@ -1,0 +1,25 @@
+{{- $username := .Values.postgresql.postgresqlUsername -}}
+{{- $password := .Values.postgresql.postgresqlPassword -}}
+{{- $host := .Values.postgresql.host -}}
+{{- $port := .Values.postgresql.service.port -}}
+{{- $database := .Values.postgresql.postgresqlDatabase -}}
+{{- $fullname := include "hello-chart.fullname" . -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ $fullname }}-config"
+data:
+  TEST_ENV: testEnv
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "{{ $fullname }}-secret"
+type: Opaque
+data:
+  DB_URL: {{ printf "jdbc:postgresql://%s:%s/%s" $host $port $database | b64enc | trimAll "\n" | quote }}
+  DB_NAME: {{ $database | b64enc | trimAll "\n" | quote }}
+  DB_USERNAME: {{ $username | b64enc | trimAll "\n" | quote }}
+  DB_PASSWORD: {{ $password | b64enc | trimAll "\n" | quote }}
+  DB_PSQL_URL: {{ printf "postgresql://%s:%s@%s/%s" $username $password $host $database | b64enc | trimAll "\n" | quote }}

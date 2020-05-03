@@ -13,11 +13,29 @@ spec:
         app: hello-app
     spec:
       containers:
-        - name: hello-py
+        - name: hello
           image: alexeyeliseev/simplerest:v3
           env:
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: hello-secret
+                  key: DB_URL
             - name: DB_USER
-              value: alexey
+              valueFrom:
+                secretKeyRef:
+                  name: hello-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hello-secret
+                  key: DB_PASSWORD
+            - name: TEST_APP
+              valueFrom:
+                configMapKeyRef:
+                  name: hello-config
+                  key: TEST_APP
           ports:
             - name: web
               containerPort: 8000

@@ -1,0 +1,18 @@
+{{- $fullname := include "hello-chart.fullname" . -}}
+{{- $labels := include "hello-chart.labels" . -}}
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ $fullname }}-test-connection"
+  labels:
+    {{- $labels | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ $fullname }}:{{ .Values.service.port }}']
+  restartPolicy: Never

@@ -1,0 +1,81 @@
+{{- $charName := .Chart.Name }}
+{{- $fullname := include "hello-chart.fullname" . -}}
+{{- $releaseName := .Release.Name }}
+{{- $service := .Release.Service }}
+{{- $chartVersion := .Chart.Version }}
+{{- $appVersion := .Chart.AppVersion }}
+{{- $postgresHost := include "postgresql.fullname" . }}
+{{- $postgresPort := .Values.postgresql.service.port }}
+
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ $charName }}-job"
+  labels:
+    app.kubernetes.io/managed-by: "{{ $service }}"
+    app.kubernetes.io/instance: "{{ $charName }}-job"
+    app.kubernetes.io/version: {{ $appVersion }}
+    helm.sh/chart: "{{ $charName }}-{{ $chartVersion }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "{{ $releaseName }}"
+      labels:
+        app.kubernetes.io/managed-by: "{{ $service }}"
+        app.kubernetes.io/instance: "{{ $releaseName }}"
+        helm.sh/chart: "{{ $charName }}-{{ $chartVersion }}"
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: check-db-ready
+          image: postgres:latest
+          env:
+            - name: POSTGRES_HOST
+              value: "{{ $postgresHost }}"
+            - name: POSTGRES_PORT
+              value: "{{ $postgresPort }}"
+          command:
+            - sh
+            - "-c"
+            - |
+              until pg_isready -h $POSTGRES_HOST  -p  $POSTGRES_PORT;
+              do echo waiting for database; sleep 2; done;
+      containers:
+        - name: post-install-job
+          image: postgres:latest
+          env:
+            - name: POSTGRES_HOST
+              value: "{{ $postgresHost }}"
+            - name: POSTGRES_PORT
+              value: "{{ $postgresPort }}"
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ $fullname }}-secret"
+                  key: DB_USERNAME
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ $fullname }}-secret"
+                  key: DB_PASSWORD
+            - name: POSTGRES_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ $fullname }}-secret"
+                  key: DB_NAME
+          command:
+            - sh
+            - "-c"
+            - |
+              psql postgres://$POSTGRES_USERNAME:$POSTGRES_PASSWORD@$POSTGRES_HOST/$POSTGRES_DATABASE <<'EOF'
+                insert into users (name) values ('FromInitDb');
+              EOF
+
+  backoffLimit: 0
