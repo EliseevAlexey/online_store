@@ -20,6 +20,22 @@ postgresql:
   postgresqlDatabase: myapp
   service:
     port: "5432"
+    type: NodePort
+  postgresqlPostgresPassword: pp
+  metrics:
+    enabled: true
+    service:
+      type: NodePort
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9187"
+      loadBalancerIP:
+    serviceMonitor:
+      enabled: true
+      additionalLabels: {}
+      namespace: monitoring
+      interval: 30s
+      scrapeTimeout: 10s
 
 ingress:
   enabled: true
@@ -28,3 +44,7 @@ ingress:
   hosts:
     - host: arch.homework
       path: /otusapp($|/)(.*)
+
+metrics:
+  serviceMonitor:
+    enabled: true

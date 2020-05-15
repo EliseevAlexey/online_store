@@ -4,6 +4,7 @@ import co.eliseev.otus.simplerest.model.converter.toDto
 import co.eliseev.otus.simplerest.model.converter.toModel
 import co.eliseev.otus.simplerest.model.dto.UserDto
 import co.eliseev.otus.simplerest.service.UserService
+import io.micrometer.core.annotation.Timed
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+@Timed(value = "controller.user.requests", histogram = true)
 @RequestMapping("/users")
 class UserController(private val userService: UserService) {
 

@@ -1,6 +1,7 @@
 package co.eliseev.otus.simplerest.controller
 
 
+import io.micrometer.core.annotation.Timed
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,6 +20,7 @@ class HealthController(private val env: Environment) {
     @GetMapping("/health")
     fun getVersion() = mapOf(STATUS to HttpStatus.OK)
 
+    @Timed(value = "controller.health.version.requests")
     @GetMapping("/version")
     fun healthCheck() = "version $VERSION from $hostName\n"
 
@@ -27,7 +29,7 @@ class HealthController(private val env: Environment) {
 
     companion object {
         private const val STATUS = "status"
-        private const val VERSION = 3
+        private const val VERSION = 5
         private val hostName = InetAddress.getLocalHost().hostName
     }
 
