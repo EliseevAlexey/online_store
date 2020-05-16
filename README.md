@@ -117,6 +117,10 @@ Create Grafana monitoring dashboard:
     minikube ip
     sudo vim /etc/hosts
     
+Starting application
+    
+    helm install my deploy/helm-dep/hello-chart/
+    
 Testing:
 
     START TESTING:
