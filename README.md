@@ -1,5 +1,5 @@
 ***
-HW-02
+HW-01
 ---
 
 Написать манифесты для деплоя в k8s для сервиса из прошлого ДЗ. 
@@ -21,7 +21,7 @@ curl -H 'Host: arch.homework' http://$(minikube ip)/otusapp/health
 ~~~
 
 ***
-HW-03
+HW-02
 ---
 
 + Добавить к развернутому приложению БД.
@@ -54,3 +54,80 @@ helm install my deploy/helm-dep/hello-chart/
 
 newman run Otus_Software_Architect.postman_collection.json
 ~~~
+
+
+
+***
+HW-03
+---
+
++ Инструментировать сервис метриками и алертами.
++ Инструментировать сервис из прошлого занятия метриками в формате Prometheus с помощью библиотеки для вашего фреймворка и ЯП.
+
++ Сделать дашборд в Графане, в котором были бы метрики с разбивкой по API методам:
+  1. Latency (response time) с квантилями по 0.5, 0.95, 0.99, max
+  2. RPS
+  3. Error Rate - количество 500ых ответов
+
++ Добавить в дашборд графики с метрикам в целом по сервису, взятые с nginx-ingress-controller:
+  1. Latency (response time) с квантилями по 0.5, 0.95, 0.99, max
+  2. RPS
+  3. Error Rate - количество 500ых ответов
+
++ Настроить алертинг в графане на Error Rate и Latency.
+
+На выходе должно быть:
+1) хелм чарт или директория с манифестами для запуска приложения с нуля. В этой же директории должны быть servicemonitor-ы. В хелм чарт в качестве зависимостей не надо устанавливать nginx-ingress-controller и прометеус-оператор. Считаем, что они уже в кубике установлены.
+В случае использования хелма без шаблонизации, отдельно про это написать и указать команду установки через хелм и имя релиза.
+2) в этой же директории dashboard.yaml - манифест с конфигмапом дашборды для графаны, в формате, который умеет автоматически применять prometheus-operator
+3) отдельно stresstest.yaml - манифсет с Job-ой, которая производит стабильную (не больше 20 и не меньше 5 рпс), нагрузку на все API методы, в бесконечном цикле. Для нагрузки надо делать запросы на ingress-controller, передавая значение имени сервиса, на котором живет ингресс-контроллер в переменной окружения, и в случае использования helm в качестве value-значения.
+4) скриншоты дашборды в момент стресс-тестирования сервиса. Например, после 5-10 минут нагрузки.
+
+
+Задание со звездочкой (+5 баллов)
++ Инструментировать базу данных с помощью экспортера для prometheus для этой БД.
++ Добавить в общий дашборд графики с метриками работы БД.
+
++ Используя существующие системные метрики из кубернетеса, добавить на дашборд графики с метриками:
+  1. Потребление подами приложения памяти
+  2. Потребление подами приолжения CPU
+---
+[Optional] Configuring cluster:
+   
+    minikube start --vm-driver=virtualbox
+    eval $(minikube docker-env)
+    kubectl create namespace monitoring
+    kubectl config set-context --current --namespace=monitoring
+
+[Optional] Install prometheus & nginx:
+
+    helm install prom stable/prometheus-operator -f monitoring/prometheus.yaml --atomic
+    helm install nginx stable/nginx-ingress -f monitoring/nginx-ingress.yaml --atomic
+    
+    **Looking in browser:**
+    kubectl port-forward service/prom-grafana 9000:80
+    kubectl port-forward service/prom-prometheus-operator-prometheus 9090
+
+Create Grafana monitoring dashboard:
+
+    kubectl apply -f monitoring/dashboard.yaml
+
+[Optional] Configure etc hosts:
+
+    minikube ip
+    sudo vim /etc/hosts
+    
+Starting application
+    
+    helm install my deploy/helm-dep/hello-chart/
+    
+Testing:
+
+    START TESTING:
+    kubectl apply -f deploy/testing/stresstest.yaml
+    
+    STOP TESTING:
+    kubectl delete -f deploy/testing/stresstest.yaml
+    
+    PAST TESTING SCREENSOTS:
+    monitoring/screenshoots

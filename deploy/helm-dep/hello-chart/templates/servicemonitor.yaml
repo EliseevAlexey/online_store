@@ -1,0 +1,25 @@
+{{- $fullname := include "hello-chart.fullname" . -}}
+{{- $labels := include "hello-chart.labels" . -}}
+{{- $selectorLabels := include "hello-chart.selectorLabels" . -}}
+{{- $targetPort := .Values.service.targetPort -}}
+
+{{- if .Values.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $fullname }}
+  labels:
+  {{ $labels | nindent 4 }}
+spec:
+  jobLabel: {{ $fullname }}
+  namespaceSelector:
+    matchNames:
+      - "{{ $.Release.Namespace }}"
+  selector:
+    matchLabels:
+      {{- $selectorLabels | nindent 6 }}
+  endpoints:
+    - interval: 15s
+      port: web
+      path: /actuator/prometheus
+{{- end }}

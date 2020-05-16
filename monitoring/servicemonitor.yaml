@@ -1,0 +1,24 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: "my-hello-chart-service-monitor"
+  labels:
+    helm.sh/chart: hello-chart-0.1.0
+    app.kubernetes.io/name: hello-chart
+    app.kubernetes.io/instance: my
+    app.kubernetes.io/version: "v4"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  jobLabel: my-hello-chart
+  namespaceSelector:
+    matchNames:
+      - "monitoring"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hello-chart
+      app.kubernetes.io/instance: my
+  endpoints:
+    - interval: 15s
+      port: 9000
+      path: '/actuator/prometheus'
+      honorLabels: true
